@@ -1,0 +1,12 @@
+{
+  "item.slave_mark.slave_mark": "§5Mark §5of §5Revolution",
+  "item.slave_mark.slave_mark.desc1": "",
+  "item.slave_mark.slave_mark.desc2": "枷锁：你的攻击速度、挖掘效率-90%",
+  "item.slave_mark.slave_mark.desc3": "镣铐：你在敌对生物附近时移动速度-90%",
+  "item.slave_mark.slave_mark.desc4": "无知：你的附魔等级-100",
+  "item.slave_mark.slave_mark.desc5": "饥困：你无时无刻接受着饥饿与反胃的效果",
+  "item.slave_mark.slave_mark.desc6": "盲目：你所获取的经验-90%",
+  "item.slave_mark.slave_mark.desc7": "病弱：你每30秒获得随机一种debuff60秒，且会叠加等级",
+  "item.slave_mark.slave_mark.desc8": "无根：你将永远拥有最大等级的灾厄之兆",
+  "item.slave_mark.slave_mark.desc9": "贱民：你的村民声望差破天际"
+}

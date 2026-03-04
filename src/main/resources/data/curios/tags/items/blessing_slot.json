@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "slave_mark:freedom",
+    "slave_mark:wilderness",
+    "slave_mark:insight",
+    "slave_mark:wealth",
+    "slave_mark:vision",
+    "slave_mark:wellbeing",
+    "slave_mark:defiance",
+    "slave_mark:heroism"
+  ]
+}
