@@ -1,25 +1,21 @@
-package com.YqIl1.slave_mark.curios;
+package com.YqIl1.slave_mark.item.curios;
 
 import com.YqIl1.slave_mark.*;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.YqIl1.slave_mark.annotation.SlaveMarkItems;
+import com.YqIl1.slave_mark.item.BaseBlessingItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.gossip.GossipContainer;
-import net.minecraft.world.entity.ai.gossip.GossipType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.EnchantmentMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -28,33 +24,18 @@ import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
+
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.List;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.Level;
 
+@SlaveMarkItems(id="slave_mark")
+public class SlaveMarkItem extends BaseBlessingItem {
 
-public class SlaveMarkItem extends Item implements ICurioItem {
-
-    private static boolean hasCounterItem(Player player, Item item) {
-        return CuriosApi.getCuriosHelper().findFirstCurio(player, item).isPresent();
-    }
-    static {
-        System.out.println("=== SlaveMarkItem static init start ===");
-        try {
-            System.out.println("ModConfig.COMMON = " + ModConfig.COMMON);
-        } catch (Throwable t) {
-            System.err.println("!!! Exception in SlaveMarkItem static init:");
-            t.printStackTrace();
-        }
-        System.out.println("=== SlaveMarkItem static init end ===");
-    }
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
@@ -70,23 +51,10 @@ public class SlaveMarkItem extends Item implements ICurioItem {
         tooltip.add(Component.translatable("item.slave_mark.slave_mark.desc9").withStyle(ChatFormatting.RED));
         tooltip.add(Component.translatable("item.slave_mark.slave_mark.desc10").withStyle(ChatFormatting.GRAY));
     }
-    @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return slotContext.entity() instanceof Player player &&
-                UniqueCurioHelper.canEquipUnique(player, stack);
-    }
 
     @Override
     public boolean canUnequip(SlotContext slotContext, ItemStack stack) {
         return slotContext.entity() instanceof Player player && player.isCreative();
-    }
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> map = HashMultimap.create();
-        // 添加槽位修饰符：佩戴此物品时增加 1 个 blessing_slot
-        CuriosApi.addSlotModifier(map, "blessing_slot", uuid, 1, AttributeModifier.Operation.ADDITION);
-        // 可以添加其他属性（如攻击速度+1）...
-        return map;
     }
 
     // 属性修饰符的固定UUID（确保不会重复）
@@ -94,19 +62,12 @@ public class SlaveMarkItem extends Item implements ICurioItem {
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("33333333-3333-3333-3333-333333333333");
 
 
-    public SlaveMarkItem(Properties properties) {
-        super(properties.stacksTo(1)); // 不可堆叠
-        // 注册事件处理器（静态内部类或外部类均可）
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
-    }
-
     // ---------- 属性修改（佩戴/卸下时生效）----------
     @Override
     public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
         if (!(slotContext.entity() instanceof Player player)) return;
-
         // 攻击速度 -90%
-        if(!hasCounterItem(player, ModItems.FREEDOM.get())){
+        if(!isWearing(player,"freedom")){
             addModifier(player, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Cursed attack speed",
                     ModConfig.COMMON.attackSpeedPenalty.get()-1, // 注意是负值
                     AttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -121,7 +82,7 @@ public class SlaveMarkItem extends Item implements ICurioItem {
     }
     // 在 SlaveMarkItem 中添加方法
     private void applySicklyEffect(Player player) {
-        if(hasCounterItem(player, ModItems.WELLBEING.get()))return;
+        if(isWearing(player,"wellbeing"))return;
         // 从 API 获取随机效果条目
         var entry = SlaveMarkAPI.getRandomSicklyDebuff();
         if (entry == null) return;
@@ -163,7 +124,7 @@ public class SlaveMarkItem extends Item implements ICurioItem {
         if (!(slotContext.entity() instanceof Player player)) return;
 
         // 判断减速
-        if(hasCounterItem(player, ModItems.FREEDOM.get())){
+        if(isWearing(player,"freedom")){
             removeModifier(player, Attributes.ATTACK_SPEED,ATTACK_SPEED_UUID);
         }
         // 每 20 tick 检测一次
@@ -182,7 +143,7 @@ public class SlaveMarkItem extends Item implements ICurioItem {
 
         // 应用或移除效果
         if (hasHostile) {
-            if (!hasCounterItem(player, ModItems.WILDERNESS.get())) {
+            if (isWearing(player,"wilderness")) {
                 addModifier(player, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Cursed movement speed", ModConfig.COMMON.attackSpeedPenalty.get()-1, AttributeModifier.Operation.MULTIPLY_TOTAL);
             }else{
                 removeModifier(player, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
@@ -193,7 +154,7 @@ public class SlaveMarkItem extends Item implements ICurioItem {
 
 
         // 饥困：饥饿5 + 反胃
-        if (!hasCounterItem(player, ModItems.WEALTH.get())) {
+        if (isWearing(player,"wealth")) {
             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 100, 4, false, false, true));
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 0, false, false, true));
         }else{
@@ -201,7 +162,7 @@ public class SlaveMarkItem extends Item implements ICurioItem {
             player.removeEffect(MobEffects.CONFUSION);
         }
         // 无根：最大等级灾厄之兆
-        if (hasCounterItem(player, ModItems.HEROISM.get())) {
+        if (isWearing(player,"heroism")) {
             player.removeEffect(MobEffects.BAD_OMEN);
         }else {
             player.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 100, 4, false, false, true));
@@ -209,14 +170,14 @@ public class SlaveMarkItem extends Item implements ICurioItem {
         // 病弱：每30秒随机一个debuff（使用玩家持久化数据计时）
         var data = player.getPersistentData();
         if (ModConfig.COMMON.enableSickly.get()) {
+            if (isWearing(player,"wellbeing"))return;
             long lastApply = data.getLong("slave_mark_sickly");
             long gameTime = player.level().getGameTime();
 
             if (gameTime - lastApply >= ModConfig.COMMON.sicklyInterval.get()) {
-                if(!hasCounterItem(player, ModItems.WELLBEING.get())) {
-                    applySicklyEffect(player);
-                    data.putLong("slave_mark_sickly", gameTime);
-                }
+                applySicklyEffect(player);
+                data.putLong("slave_mark_sickly", gameTime);
+
             }
 
         }
@@ -246,32 +207,30 @@ public class SlaveMarkItem extends Item implements ICurioItem {
 
             for (Player player : level.players()) {
                 if (player.containerMenu instanceof EnchantmentMenu menu) {
-                    BlockPos menuPos = getEnchantmentTablePos(menu);
-                    if (menuPos != null && menuPos.equals(pos)) {
-                        if (isWearingCurse(player)) {
-                            if (!hasCounterItem(player, ModItems.INSIGHT.get())) {
-                                event.setEnchantLevel(ModConfig.COMMON.forceEnchantmentLevel.get());
+                    if (isWearing(player, "slave_mark")) {
+                        BlockPos menuPos = getEnchantmentTablePos(menu);
+                        if (menuPos != null && menuPos.equals(pos)) {
+                            if (isWearing(player, "slave_mark")) {
+                                if (!isWearing(player, "insight")) {
+                                    event.setEnchantLevel(ModConfig.COMMON.forceEnchantmentLevel.get());
+                                }
                             }
+                            break;
                         }
-                        break;
                     }
                 }
             }
         }
 
-
         //声望
 
 
 
-        private boolean isWearingCurse(Player player) {
-            return CuriosApi.getCuriosHelper().findFirstCurio(player, ModItems.SLAVE_MARK.get()).isPresent();
-        }
         @SubscribeEvent
         public void onXpPickup(PlayerXpEvent.PickupXp event) {
             Player player = event.getEntity();
-            if (isWearingCurse(player)) {
-                if (hasCounterItem(player, ModItems.VISION.get())) {
+            if (isWearing(player,"slave_mark")) {
+                if (isWearing(player,"vision")) {
                     event.getOrb().value *= ModConfig.COMMON.xpIncrease.get();
                 }else {
                     // 盲目：获取经验 -90%
@@ -282,8 +241,8 @@ public class SlaveMarkItem extends Item implements ICurioItem {
         @SubscribeEvent
         public void onBreakSpeed(net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed event) {
             Player player = event.getEntity();
-            if (isWearingCurse(player)) {
-                if (!hasCounterItem(player, ModItems.FREEDOM.get())) {
+            if (isWearing(player,"slave_mark")) {
+                if (isWearing(player,"freedom")) {
                     // 挖掘速度降低90%
                     event.setNewSpeed((float) (event.getOriginalSpeed() * ModConfig.COMMON.miningSpeedPenalty.get() - 1));
                 }
@@ -292,8 +251,8 @@ public class SlaveMarkItem extends Item implements ICurioItem {
         @SubscribeEvent
         public void onOpeningVillagerTrade(PlayerInteractEvent event) {
             Player player = event.getEntity();
-            if (!isWearingCurse(player)) return;
-            if (hasCounterItem(player, ModItems.VISION.get())) return;
+            if (!isWearing(player,"slave_mark")) return;
+            if (isWearing(player,"heroism")) return;
             player.level().getEntitiesOfClass(Villager.class, player.getBoundingBox().inflate(16))
                     .forEach(villager -> addReputation.addReputation(villager, player, false));
 

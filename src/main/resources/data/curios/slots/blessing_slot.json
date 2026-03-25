@@ -1,5 +1,7 @@
 {
   "size": 0,
+  "replace": false,
+  "icon": "slave_mark:slot/blessing_slot",
   "use_native_gui": true,
   "render_toggle": true
 }

@@ -53,6 +53,6 @@
   "item.slave_mark.slave_mark.desc10": "或许，你的努力将会给你带来远超你相信的好处",
   "curios.identifier.blessing_slot": "祝福槽位",
   "curios.modifiers.blessing_slot": "当佩戴祝福槽位时：",
-  "curios.identifier.cursed_slot": "诅咒槽位",
+  "curios.identifier.cursed_slot": "§c诅咒槽位",
   "curios.modifiers.cursed_slot": "当佩戴诅咒槽位时："
 }

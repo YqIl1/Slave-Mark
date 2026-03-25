@@ -8,5 +8,11 @@
   "item.slave_mark.slave_mark.desc6": "盲目：你所获取的经验-90%",
   "item.slave_mark.slave_mark.desc7": "病弱：你每30秒获得随机一种debuff60秒，且会叠加等级",
   "item.slave_mark.slave_mark.desc8": "无根：你将永远拥有最大等级的灾厄之兆",
-  "item.slave_mark.slave_mark.desc9": "贱民：你的村民声望差破天际"
+  "item.slave_mark.slave_mark.desc9": "贱民：你的村民声望差破天际",
+  "item.slave_mark.slave_mark.desc10": "或许，你的努力将会给你带来远超你相信的好处",
+  "curios.identifier.blessing_slot": "祝福槽位",
+  "curios.modifiers.blessing_slot": "当佩戴祝福槽位时：",
+  "curios.identifier.cursed_slot": "诅咒槽位",
+  "curios.modifiers.cursed_slot": "当佩戴诅咒槽位时：",
+
 }

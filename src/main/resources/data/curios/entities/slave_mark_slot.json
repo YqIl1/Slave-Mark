@@ -1,0 +1,4 @@
+{
+  "entities": ["player"],
+  "slots": ["cursed_slot","blessing_slot"]
+}
