@@ -16,6 +16,8 @@ public class ModConfig {
     }
 
     public static class Common {
+        //要懒多久
+        public final ForgeConfigSpec.IntValue timeToProcrastinate;
         // 攻击速度减成（百分比，0.9 = -90%）
         public final ForgeConfigSpec.DoubleValue attackSpeedPenalty;
         // 移动速度减成
@@ -56,6 +58,9 @@ public class ModConfig {
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.comment("奴隶烙印模组配置").push("slave_mark");
+            timeToProcrastinate = builder
+                    .comment("拖延时间，还要懒多久")
+                    .defineInRange("timeToProcrastinate", 600, 0, 6000);
             attackSpeedBonus = builder
                     .comment("攻击速度增加")
                     .defineInRange("attackSpeedBonus", 1, 0.0, 10);

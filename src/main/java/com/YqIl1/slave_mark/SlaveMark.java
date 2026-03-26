@@ -51,6 +51,7 @@ public class SlaveMark {
 
     public SlaveMark() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         // 其他注册...
     }
 

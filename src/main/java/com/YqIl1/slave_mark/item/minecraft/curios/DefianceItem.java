@@ -1,4 +1,4 @@
-package com.YqIl1.slave_mark.item.curios;
+package com.YqIl1.slave_mark.item.minecraft.curios;
 
 import com.YqIl1.slave_mark.ModConfig;
 import com.YqIl1.slave_mark.annotation.SlaveMarkItems;

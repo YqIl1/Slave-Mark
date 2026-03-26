@@ -54,5 +54,8 @@
   "curios.identifier.blessing_slot": "祝福槽位",
   "curios.modifiers.blessing_slot": "当佩戴祝福槽位时：",
   "curios.identifier.cursed_slot": "§c诅咒槽位",
-  "curios.modifiers.cursed_slot": "当佩戴诅咒槽位时："
+  "curios.modifiers.cursed_slot": "当佩戴诅咒槽位时：",
+  "item.slave_mark.procrastination": "明日复明日",
+  "item.slave_mark.procrastination.desc1": "明日何其多",
+  "item.slave_mark.procrastination.desc2": "逃得过一时，逃不过一世"
 }
