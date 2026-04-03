@@ -57,15 +57,18 @@ public class ProcrastinationItem extends Item {
             Entity target = event.getTarget();
             EntityType targetType = target.getType();
             ItemStack itemStack = player.getMainHandItem();
-            itemStack.hurtAndBreak(1, player, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-            Stack<EntityType> stack = playerMobs.computeIfAbsent(playerUUID, k -> new Stack<>());
-            if(stack.isEmpty()){
-                long currentTime = level.getGameTime();
-                long delayTicks = ModConfig.COMMON.timeToProcrastinate.get()*20;
-                player.getPersistentData().putLong("delayed_action_time", currentTime + delayTicks);
+            if(itemStack.getItem() instanceof ProcrastinationItem){
+                itemStack.hurtAndBreak(1, player, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                Stack<EntityType> stack = playerMobs.computeIfAbsent(playerUUID, k -> new Stack<>());
+                if(stack.isEmpty()){
+                    long currentTime = level.getGameTime();
+                    long delayTicks = ModConfig.COMMON.timeToProcrastinate.get()*20;
+                    player.getPersistentData().putLong("delayed_action_time", currentTime + delayTicks);
+                }
+                target.kill();
+                stack.push(targetType);
             }
-            target.kill();
-            stack.push(targetType);
+
         }
         @SubscribeEvent
         public void onTimePast(TickEvent.PlayerTickEvent event){
