@@ -35,7 +35,7 @@ public class ProcrastinationItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
-        tooltip.add(Component.translatable("item.slave_mark.procrastination.desc1").withStyle(ChatFormatting.WHITE));
+        tooltip.add(Component.translatable("item.slave_mark.procrastination.desc1").withStyle(ChatFormatting.DARK_PURPLE));
         tooltip.add(Component.translatable("item.slave_mark.procrastination.desc2").withStyle(ChatFormatting.YELLOW));
     }
 
@@ -74,11 +74,11 @@ public class ProcrastinationItem extends Item {
             if (player.level().isClientSide) return; // 只在服务端处理
             UUID playerId = player.getUUID();
             Stack<EntityType> stack = playerMobs.get(playerId);
+            if (stack==null || stack.isEmpty()) return;
             CompoundTag data = player.getPersistentData();
             if (data.contains("delayed_action_time")) {
                 long triggerTime = data.getLong("delayed_action_time");
                 if (player.level().getGameTime() >= triggerTime) {
-
                     stack.pop().spawn((ServerLevel) player.level(), new BlockPos((int)player.getX(), (int)player.getY()+1, (int)player.getZ()), MobSpawnType.COMMAND);
                     if(stack.isEmpty()){
                         playerMobs.remove(playerId);

@@ -60,7 +60,7 @@ public class ModConfig {
             builder.comment("奴隶烙印模组配置").push("slave_mark");
             timeToProcrastinate = builder
                     .comment("拖延时间，还要懒多久")
-                    .defineInRange("timeToProcrastinate", 600, 0, 6000);
+                    .defineInRange("timeToProcrastinate", 60, 0, 6000);
             attackSpeedBonus = builder
                     .comment("攻击速度增加")
                     .defineInRange("attackSpeedBonus", 1, 0.0, 10);
