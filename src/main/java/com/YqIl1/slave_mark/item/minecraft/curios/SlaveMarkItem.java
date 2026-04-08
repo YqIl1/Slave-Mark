@@ -143,8 +143,8 @@ public class SlaveMarkItem extends BaseBlessingItem {
 
         // 应用或移除效果
         if (hasHostile) {
-            if (isWearing(player,"wilderness")) {
-                addModifier(player, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Cursed movement speed", ModConfig.COMMON.attackSpeedPenalty.get()-1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            if (!isWearing(player,"wilderness")) {
+                addModifier(player, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Cursed movement speed", ModConfig.COMMON.movementSpeedPenalty.get()-1, AttributeModifier.Operation.MULTIPLY_TOTAL);
             }else{
                 removeModifier(player, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
             }
@@ -154,7 +154,8 @@ public class SlaveMarkItem extends BaseBlessingItem {
 
 
         // 饥困：饥饿5 + 反胃
-        if (isWearing(player,"wealth")) {
+        //dont have then add
+        if (!isWearing(player,"wealth")) {
             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 100, 4, false, false, true));
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 0, false, false, true));
         }else{
@@ -242,7 +243,7 @@ public class SlaveMarkItem extends BaseBlessingItem {
         public void onBreakSpeed(net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed event) {
             Player player = event.getEntity();
             if (isWearing(player,"slave_mark")) {
-                if (isWearing(player,"freedom")) {
+                if (!isWearing(player,"freedom")) {
                     // 挖掘速度降低90%
                     event.setNewSpeed((float) (event.getOriginalSpeed() * ModConfig.COMMON.miningSpeedPenalty.get() - 1));
                 }
